@@ -11,6 +11,12 @@ class AlphaIncrement
     protected $length;
     protected $alphabet;
 
+    /**
+     * @param int $length Expected length of the generated string
+     * @param string $alphabet Characters to use for the resulting string
+     * @param boolean $shuffleAlphabet Wether or not to shuffle the given
+     * alphabet to hide some pattern that may be visible.
+     */
     public function __construct(
         $length          = self::DEFAULT_LENGTH,
         $alphabet        = self::DEFAULT_ALPHABET,
@@ -27,6 +33,11 @@ class AlphaIncrement
         }
     }
 
+    /**
+     * Converts an auto-incremental integer to a unique string
+     * @param integer $integerId The id to convert
+     * @return string
+     */
     public function encode($integerId)
     {
         assert(is_int($integerId)); // PHP 5.6 : can't type the param as int :(
@@ -39,6 +50,11 @@ class AlphaIncrement
         return $this->charIndexesToString($newId);
     }
 
+    /**
+     * Shuffles tyhe given alphabet with a pseudo randomization.
+     * @param string $alphabet
+     * @return string
+     */
     public function shuffleAlphabet($alphabet)
     {
         mt_srand(strlen($alphabet));
@@ -52,7 +68,8 @@ class AlphaIncrement
     /**
      * Converts the given integer to the base defined (by radix)
      * by the alphabet `$this->alphabet`.
-     * Returns the resulting string as an array of indexes in the alphabet.
+     * @param integer $number
+     * @return array(integer) The resulting string as an array of indexes in the alphabet.
      */
     public function convertPositiveIntegerToCustomBase($number)
     {
@@ -70,6 +87,11 @@ class AlphaIncrement
         return $digits;
     }
 
+    /**
+     * Determines the length that will take the given number in the target base.
+     * @param integer $number
+     * @return integer
+     */
     public function getExpectedLengthInCustomBase($number)
     {
         $expectedLength = 0;
@@ -82,6 +104,8 @@ class AlphaIncrement
     /**
      * Converts an array of indexes to a string with the
      * characters at those indexes in the alphabet.
+     * @param array(integer)
+     * @return array(integer)
      */
     public function charIndexesToString(array $indexes)
     {
@@ -95,6 +119,8 @@ class AlphaIncrement
     /**
      * Left pads the given string with the character representing
      * zero in `$this->alphabet`, to match the expected length `$this->length`.
+     * @param array(integer)
+     * @return array(integer)
      */
     public function prefixWithCharacterRepresentingZero(array $indexes)
     {
@@ -108,6 +134,8 @@ class AlphaIncrement
      * Generates a pseudo random integer arrays, in a way
      * that the last elements of the array are always
      * the same for a given alphabet.
+     * @param integer $length
+     * @return array(integer)
      */
     public function getCaesarCipherSwitchAmounts($length)
     {
@@ -119,6 +147,11 @@ class AlphaIncrement
         return $switchs;
     }
 
+    /**
+     * Applies a vigenere cipher to kind of randomize the string
+     * @param array(integer)
+     * @return array(integer)
+     */
     public function applyVigenereCipher(array $indexes)
     {
         $switchs = $this->getCaesarCipherSwitchAmounts(count($indexes));
