@@ -2,6 +2,7 @@
     "name": "seb-c/alpha-increment",
     "description": "A library to generate a really unique string from just a classic auto-incremental numeric id.",
     "type": "library",
+    "version": "1.0.0",
     "require": {
         "php": ">=5.6"
     },
