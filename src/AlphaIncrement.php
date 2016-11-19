@@ -23,7 +23,7 @@ class AlphaIncrement
         $shuffleAlphabet = self::DEFAULT_SHUFFLE_ALPHABET
     ) {
         assert($length > 0);
-        assert(strlen($alphabet) > 0);
+        assert(mb_strlen($alphabet) > 0);
 
         $this->length = $length;
         $this->alphabet = $alphabet;
@@ -57,11 +57,19 @@ class AlphaIncrement
      */
     public function shuffleAlphabet($alphabet)
     {
-        mt_srand(strlen($alphabet));
-        $alphabetAsArray = str_split($alphabet);
+        mt_srand(mb_strlen($alphabet));
+
+        // Splitting chars manually since str_split has no mb_xxx variant
+        $alphabetAsArray = [];
+        for ($i = 0; $i < mb_strlen($alphabet); $i++) {
+            $alphabetAsArray[] = mb_substr($alphabet, $i, 1);
+        }
+        
+        // Shuffling the array
         usort($alphabetAsArray, function ($char) {
             return mt_rand(-1, 1);
         });
+
         return implode('', $alphabetAsArray);
     }
 
@@ -78,7 +86,7 @@ class AlphaIncrement
         $digits = [];
         $remaining = $number;
         for ($i = $expectedLength - 1; $i > 0; $i--) {
-            $positionValue = strlen($this->alphabet) ** $i;
+            $positionValue = mb_strlen($this->alphabet) ** $i;
             $digits[] = (int) floor($remaining / $positionValue);
             $remaining = $remaining % $positionValue;
         }
@@ -111,7 +119,7 @@ class AlphaIncrement
     {
         $string = '';
         foreach ($indexes as $index) {
-            $string .= $this->alphabet[$index];
+            $string .= mb_substr($this->alphabet, $index, 1);
         }
         return $string;
     }
@@ -139,7 +147,7 @@ class AlphaIncrement
      */
     public function getCaesarCipherSwitchAmounts($length)
     {
-        mt_srand(strlen($this->alphabet));
+        mt_srand(mb_strlen($this->alphabet));
         $switchs = [];
         for ($i = 0; $i < $length; $i++) {
             array_unshift($switchs, mt_rand());
@@ -158,7 +166,7 @@ class AlphaIncrement
 
         $newIndexes = [];
         for ($i = 0; $i < count($indexes); $i++) {
-            $newIndexes[] = ($indexes[$i] + $switchs[$i]) % strlen($this->alphabet);
+            $newIndexes[] = ($indexes[$i] + $switchs[$i]) % mb_strlen($this->alphabet);
         }
         return $newIndexes;
     }
