@@ -30,6 +30,19 @@ class AlphaIncrementTest extends TestCase
         $this->assertEquals([1, 0, 0, 1], $ai->convertPositiveIntegerToCustomBase(28));
     }
 
+    public function testShuffleAlphabet()
+    {
+        $alphabet = 'ABCDEF';
+        $ai = new AlphaIncrement();
+        $shuffled = $ai->shuffleAlphabet($alphabet);
+
+        $this->assertNotEquals($shuffled, $alphabet);
+        $this->assertEquals(strlen($alphabet), strlen($shuffled));
+        for ($i = 0; $i < strlen($alphabet); $i++) {
+            $this->assertTrue(strpos($shuffled, $alphabet[$i]) !== false, 'Suffled alphabet doesn`t contain character `'.$alphabet[$i].'`.');
+        }
+    }
+
     public function testCharIndexesToString()
     {
         $ai = new AlphaIncrement(2, 'AB1', false);

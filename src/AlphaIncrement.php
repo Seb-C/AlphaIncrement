@@ -23,7 +23,7 @@ class AlphaIncrement
         $this->alphabet = $alphabet;
 
         if ($shuffleAlphabet) {
-            $this->alphabet = $this->pseudoRandomShuffle($this->alphabet);
+            $this->alphabet = $this->shuffleAlphabet($this->alphabet);
         }
     }
 
@@ -39,7 +39,7 @@ class AlphaIncrement
         return $this->charIndexesToString($newId);
     }
 
-    public function pseudoRandomShuffle($alphabet)
+    public function shuffleAlphabet($alphabet)
     {
         mt_srand(strlen($alphabet));
         $alphabetAsArray = str_split($alphabet);
